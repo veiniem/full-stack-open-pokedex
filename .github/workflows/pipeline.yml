@@ -46,7 +46,7 @@ jobs:
 
       - name: Deployment success
         uses: rjstone/discord-webhook-notify@v1.0.4
-        if: success() && ${{ env.IS_DEPLOYMENT }}
+        if: ${{ success() && env.IS_DEPLOYMENT }}
         with:
           severity: info
           description: Successful deployment
@@ -55,7 +55,7 @@ jobs:
       
       - name: Deployment failed
         uses: rjstone/discord-webhook-notify@v1.0.4
-        if: failure() && ${{ env.IS_DEPLOYMENT }}
+        if: ${{ failure() && env.IS_DEPLOYMENT }}
         with:
           severity: error
           description: Deployment failed
