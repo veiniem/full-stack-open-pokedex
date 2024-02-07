@@ -4,15 +4,12 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize]
 
 env:
   IS_DEPLOYMENT: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message), ','), '#skip') }}
 
 jobs:
-  simple_deployment_pipeline:
+  deployment_pipeline:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +38,7 @@ jobs:
           wait-on: http://localhost:5000
 
       - name: Trigger deployment
-        if: ${{ env.IS_DEPLOYMENT }}
+        if: ${{success() && env.IS_DEPLOYMENT }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
 
       - name: Deployment success
@@ -50,9 +47,9 @@ jobs:
         with:
           severity: info
           description: Successful deployment
-          details: PokeDex at ${{ secrets.APP_URL }}
+          details: PokeDex (${{ github.event.url }}) at ${{ secrets.APP_URL }}
           webhookUrl: ${{ secrets.FSO_DISCORD_WEBHOOK }}
-      
+
       - name: Deployment failed
         uses: rjstone/discord-webhook-notify@v1.0.4
         if: ${{ failure() && env.IS_DEPLOYMENT }}
@@ -63,7 +60,7 @@ jobs:
           webhookUrl: ${{ secrets.FSO_DISCORD_WEBHOOK }}
 
   tag_release:
-    needs: [simple_deployment_pipeline]
+    needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
