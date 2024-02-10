@@ -30,3 +30,19 @@ jobs:
           # Basic auth login password pair.
           # Format: `login:password`
           # basic-auth: "login:password" # Optional, default is empty
+      - name: Notify webhook healthy
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ success() }}
+        with:
+          severity: info
+          description: Health check success
+          details: PokeDex at ${{ secrets.APP_URL }}
+          webhookUrl: ${{ secrets.FSO_DISCORD_WEBHOOK }}
+      - name: Notify webhook unhealthy
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ failure() }}
+        with:
+          severity: info
+          description: Health check failure
+          details: PokeDex at ${{ secrets.APP_URL }}
+          webhookUrl: ${{ secrets.FSO_DISCORD_WEBHOOK }}
