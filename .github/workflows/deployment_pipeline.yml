@@ -47,7 +47,7 @@ jobs:
         with:
           severity: info
           description: Successful deployment
-          details: PokeDex (${{ github.event.url }}) at ${{ secrets.APP_URL }}
+          details: PokeDex (${{ toJson(github.event.url) }}) at ${{ secrets.APP_URL }}
           webhookUrl: ${{ secrets.FSO_DISCORD_WEBHOOK }}
 
       - name: Deployment failed
@@ -56,7 +56,7 @@ jobs:
         with:
           severity: error
           description: Deployment failed
-          details: Unable to deploy ${{ github.event.url }}
+          details: Unable to deploy ${{ toJson(github.event.url) }}
           webhookUrl: ${{ secrets.FSO_DISCORD_WEBHOOK }}
 
   tag_release:
