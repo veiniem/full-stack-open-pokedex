@@ -2,7 +2,8 @@
 
 This repository is used for the CI/CD module of the Full stack open course
 
-Fork the repository to complete course exercises
+The repository working as submission for exercises 11.20-11.21 can be found at:
+https://github.com/veiniem/bloglist_cicd
 
 ## Commands
 
